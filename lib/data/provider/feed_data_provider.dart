@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 import 'package:rick_morty/data/models/character.dart';
 import 'package:rick_morty/data/models/list_characters.dart';
 import 'package:rick_morty/services/dio_service.dart';
 import 'package:rick_morty/utils/global.dart';
 
 class FeedDataProvider extends ChangeNotifier {
+  Box appBox;
+
   List<int> favorite = [];
   List<Character> characters = [];
   int page = 1;
@@ -13,7 +16,14 @@ class FeedDataProvider extends ChangeNotifier {
 
   FeedDataProvider() {
     logger.d("Inside FeedData Provider Constructor");
-    addCharactersInList();
+    appBox = Hive.box("rick-morty");
+    if (appBox == null || appBox.length == 0)
+      addCharactersInList();
+    else {
+      page = appBox.get("page");
+      characters = appBox.get("characters").characters;
+      favorite = appBox.get("favorite") ?? [];
+    }
   }
 
   addCharactersInList() async {
@@ -29,6 +39,8 @@ class FeedDataProvider extends ChangeNotifier {
         characters.addAll(newCharacters);
         isLoading = false;
         ++page;
+        appBox.put("page", page);
+        appBox.put("characters", ListCharacters(characters));
       } catch (e) {
         isLoading = false;
         logger.e("Error at catch of FeedDataProvider");
@@ -44,11 +56,13 @@ class FeedDataProvider extends ChangeNotifier {
     } else {
       favorite.add(index);
     }
+    appBox.put("favorite", favorite);
     notifyListeners();
   }
 
   clearAllFavorites() {
     favorite.clear();
+    appBox.put("favorite", favorite);
     notifyListeners();
   }
 }

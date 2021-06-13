@@ -81,6 +81,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
               ),
             );
           }
+          // this appears only while calling for page 1
           return Center(child: CircularProgressIndicator());
         },
       ),
