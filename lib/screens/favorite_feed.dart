@@ -27,7 +27,7 @@ class _FavoriteFeedState extends State<FavoriteFeed>
             preferredSize: Size.fromHeight(h * 0.05),
             child: AppBar(
               title: Text(
-                "Rick And Morty",
+                "Favorites",
                 style: TextStyle(fontSize: h * 0.025),
               ),
               centerTitle: true,
