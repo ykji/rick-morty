@@ -20,69 +20,70 @@ class _FavoriteFeedState extends State<FavoriteFeed>
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     logger.d("Building FavoriteFeed Screen");
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(h * 0.05),
-        child: AppBar(
-          title: Text(
-            "Rick And Morty",
-            style: TextStyle(fontSize: h * 0.025),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.brown[200],
-          actions: Provider.of<FeedDataProvider>(context).favorite.length == 0
-              ? []
-              : [
-                  InkWell(
-                    child: Center(
-                        child: Text(
-                      "Clear All  ",
-                      style: TextStyle(fontSize: h * 0.02),
-                    )),
-                    onTap: () {
-                      showDialogBox(context);
-                    },
-                  )
-                ],
-        ),
-      ),
-      backgroundColor: Colors.white54,
-      body: Consumer<FeedDataProvider>(
-        builder: (context, feedData, child) {
-          return Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: w * 0.02,
-                vertical: h * 0.02,
+    return Consumer<FeedDataProvider>(
+      builder: (context, feedData, child) {
+        return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(h * 0.05),
+            child: AppBar(
+              title: Text(
+                "Rick And Morty",
+                style: TextStyle(fontSize: h * 0.025),
               ),
-              child: feedData.favorite.length == 0
-                  ? Column(
-                      children: [
-                        SizedBox(height: h * 0.1),
-                        Text(
-                          "Don't you have any favorites?\nCome on dude!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: h * 0.025),
-                        ),
-                        Image(image: AssetImage("assets/no_fav.png")),
-                      ],
-                    )
-                  : GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: w * 0.5,
-                        childAspectRatio: 4 / 5,
-                        crossAxisSpacing: w * 0.02,
-                        mainAxisSpacing: h * 0.01,
+              centerTitle: true,
+              backgroundColor: Colors.brown[200],
+              actions: feedData.favorite.length == 0
+                  ? []
+                  : [
+                      InkWell(
+                        child: Center(
+                            child: Text(
+                          "Clear All  ",
+                          style: TextStyle(fontSize: h * 0.02),
+                        )),
+                        onTap: () {
+                          showDialogBox(context);
+                        },
+                      )
+                    ],
+            ),
+          ),
+          backgroundColor: Colors.white54,
+          body: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: w * 0.02,
+              vertical: h * 0.02,
+            ),
+            child: feedData.favorite.length == 0
+                ? Column(
+                    children: [
+                      SizedBox(height: h * 0.1),
+                      Text(
+                        "Don't you have any favorites?\nCome on dude!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: h * 0.025),
                       ),
-                      itemCount: feedData.favorite.length,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return CharacterCard(
-                          index: feedData.favorite[index],
-                          feedData: feedData,
-                        );
-                      },
-                    ));
-        },
-      ),
+                      Image(image: AssetImage("assets/no_fav.png")),
+                    ],
+                  )
+                : GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: w * 0.5,
+                      childAspectRatio: 4 / 5,
+                      crossAxisSpacing: w * 0.02,
+                      mainAxisSpacing: h * 0.01,
+                    ),
+                    itemCount: feedData.favorite.length,
+                    itemBuilder: (BuildContext ctx, index) {
+                      return CharacterCard(
+                        index: feedData.favorite[index],
+                        feedData: feedData,
+                      );
+                    },
+                  ),
+          ),
+        );
+      },
     );
   }
 
